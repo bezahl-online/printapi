@@ -1,0 +1,9 @@
+
+version: "3"
+services:
+  printapi:
+    build: .
+    restart: always
+    image: "bezahlonline/printapi"
+    ports:
+      - "8050:8050"

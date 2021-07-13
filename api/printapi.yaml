@@ -1,0 +1,66 @@
+openapi: '3.0.1'
+info:
+  version: '0.1.0'
+  title: PRINTAPI
+  description: Printer API
+
+servers:
+  - url: http://localhost:8050
+
+
+paths:
+  /test:
+    get:
+      description: Returns OK
+      responses:
+        '200':
+          $ref: '#/components/responses/statusresponse'
+
+
+  /print:
+    post:
+      operationId: print
+      requestBody:
+        description: 'prints a pdf given by the URL'
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pdf_url:
+                  type: string
+                  example: "http://localhost:8090/invoice_pdf?code=99999120210712170257"
+              required:
+                - pdf_url
+      responses:
+        '200':
+          $ref: '#/components/responses/statusresponse'
+        '400':
+          $ref: '#/components/responses/statusresponse'
+
+
+components:
+
+  responses:
+    statusresponse:
+      description: status message with status code and message
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/status'
+
+
+  schemas:
+    status:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Status code
+        message:
+          type: string
+          description: Status message
