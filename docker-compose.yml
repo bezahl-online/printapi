@@ -1,4 +1,4 @@
-
+# FIXME: need to print to host, else nothing happens
 version: "3"
 services:
   printapi:

@@ -14,23 +14,10 @@ ENV GO111MODULE=on \
 # Move to working directory /build
 WORKDIR /printapi
 
-# Copy and download dependency using go mod
-#COPY go.mod .
-#COPY go.sum .
-#RUN go mod download
-
-# Copy the build image into the container
-# need to build like this:
-# $ CGO_ENABLED=0 go build -o printapi
 ADD printapi .
 ADD localhost.crt .
 ADD localhost.key .
 
-# Build the application
-#RUN go build -o server .
-
-# Export necessary port
 EXPOSE 8050
 
-# Command to run when starting the container
 CMD ["/printapi/printapi"]
