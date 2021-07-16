@@ -22,6 +22,8 @@ func main() {
 	port := &serverPort
 	e := echo.New()
 	e.Use(middleware.CORS())
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 
 	var server api.ServerInterface
 

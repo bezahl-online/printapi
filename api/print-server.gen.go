@@ -8,16 +8,21 @@ import (
 	"compress/gzip"
 	"encoding/base64"
 	"fmt"
+	"net/http"
 	"net/url"
 	"path"
 	"strings"
 
+	"github.com/deepmap/oapi-codegen/pkg/runtime"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/labstack/echo/v4"
 )
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
+
+	// (GET /invoice)
+	GetInvoice(ctx echo.Context, params GetInvoiceParams) error
 
 	// (POST /print)
 	Print(ctx echo.Context) error
@@ -29,6 +34,24 @@ type ServerInterface interface {
 // ServerInterfaceWrapper converts echo contexts to parameters.
 type ServerInterfaceWrapper struct {
 	Handler ServerInterface
+}
+
+// GetInvoice converts echo context to params.
+func (w *ServerInterfaceWrapper) GetInvoice(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetInvoiceParams
+	// ------------- Required query parameter "code" -------------
+
+	err = runtime.BindQueryParameter("form", true, true, "code", ctx.QueryParams(), &params.Code)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter code: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.GetInvoice(ctx, params)
+	return err
 }
 
 // Print converts echo context to params.
@@ -77,6 +100,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 		Handler: si,
 	}
 
+	router.GET(baseURL+"/invoice", wrapper.GetInvoice)
 	router.POST(baseURL+"/print", wrapper.Print)
 	router.GET(baseURL+"/test", wrapper.GetTest)
 
@@ -85,14 +109,16 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/6xTUW/TMBD+K9bBY1Q7GVNZJITgBVUgqMp4mqbJSy6Jp8Q29rVQVfnvyHbT0m0VApGX",
-	"XM533/flu/MOKjNYo1GTh3IHDr012mP88CRp7adUyFRGE2oKobS2V5UkZTR/8EbHhqrDQYbopcMGSnjB",
-	"j/A8nXqeYGEcxwxq9JVTNqBAuSdkA3ovW2Q/FHVsn6tMjUzqejqE0L1HPGoNkXXGoiOV/iH0hfcp0dcj",
-	"KGTQGDdIghKUposCMqCtxfSJLToYM5hYzyFN54deT07pNqp0+H2tHNZQ3sCecSq/PdSb+wesKJmidGOe",
-	"Mi1d0OPYu+Ui0CjqQ99ytfh8nVIbdD6Vilk+E0G2sailVVDCxUzMcsjASuqiMdwGvGiY8fEdbIvzXNQT",
-	"HST16Om9qbd/tQGnY7B1c7d2fQjxpxxs1N4R2ZLz3lSy74yn8rW4ElzpjVEV3tm6eRvsenMVnrwQRS7m",
-	"eZHPRXE5/6PRE+HzDp86G53wTDJbN6xVG9TsfsuoQ/Zt9Qki8G+3ohDi3IYf6vijqzNm8Opf2qJYTpgG",
-	"1CI9XYsV0tppz758hOzRCD8gXYfW//EDSYpHF7YMypsdxHE+N8NLAePt+CsAAP//Jswf6loEAAA=",
+	"H4sIAAAAAAAC/6xUXW/TMBT9K9aFx6hJO6YxSwjBC6pAMI3xNE2Tl9y0nhrbs28K1ZT/jq6dLPQLwaAv",
+	"dez7cXzOuX6E0jbOGjQUQD6Cx+CsCRg/tFlbXeLtsMl7pTWEhnipnFvpUpG2Jr8P1vBeKJfYKF7V1jeK",
+	"QMKdNspvIAPaOAQJgbw2C+i6LoMKQ+m14xIgwSO13gShRMoRgTyqRnzXtBS0RNE3F7aOn98u59BlEEhR",
+	"G54F8qXHGiS8yEcW8nQa8lT2EM50IhoMQS0wwev3SluhUKYaDoGz+4qxdSoqH8F569CTTlRzHv9vN/o6",
+	"FoVsZFQbOpmNhGpDuEDPVAxdj1UazvfFyMDjQ6s9ViCvoe84hN88xdu7eywpkaJNbfc7XXjG48W7izm3",
+	"0bTivIvL+eertLVGH1JoMZlOCoZtHRrlNEg4mRSTKWTgFC0jMXlvQl4vMErKvEVB5xVI+IA070M4zasG",
+	"CX0Aeb2LjC3jsUTtaKAUf6jGRYDn/JvOitm0OJvOpmfF7PQM+I4g4aHFaGCjGg7tc0e+yLeY/eKqXW5v",
+	"su25mhXFMfM9xeV7w9dl8OpPEnfGoYta5Y5lib6z4QCLUbX+Uhjova02fzVI2252VX3b+hUvR4aXRE7m",
+	"+cqWarW0geTr4rx4uqar6rdM7JsjQvzer0PDw0bdtkFkgh8ZV9VioddoxN2mf08+QfccrXYp/yelCJNA",
+	"vdu3wV/2T+SXj5DtD8IVp/6PCyQoAf16GKUo5yENTwvobrqfAQAA///MzL4aSAYAAA==",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

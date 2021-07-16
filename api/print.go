@@ -28,7 +28,7 @@ var URL = "api.mms.bezahl.online/invoicePDF?"
 
 func print(URL string) error {
 	filePath := "test.pdf"
-	err := DownloadFile(filePath, URL)
+	err := downloadFile(filePath, URL)
 	if err != nil {
 		return err
 	}
@@ -49,7 +49,7 @@ func print(URL string) error {
 	return nil
 }
 
-func DownloadFile(filepath string, url string) error {
+func downloadFile(filepath string, url string) error {
 
 	// Get the data
 	resp, err := http.Get(url)

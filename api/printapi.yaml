@@ -38,6 +38,23 @@ paths:
         '400':
           $ref: '#/components/responses/statusresponse'
 
+  /invoice:
+    get:
+      parameters:
+        - name: code
+          in: query
+          description: >-
+            the receipt code
+          schema:
+            type: string
+          required: true
+          example: '99999120210712170257'
+
+      responses:
+        '200':
+          $ref: '#/components/responses/invoice_response'
+        '400':
+          $ref: '#/components/responses/statusresponse'
 
 components:
 
@@ -48,7 +65,13 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/status'
-
+    invoice_response:
+      description: returns a binary stream with the content of the URI
+      content:
+        application/json:
+          schema:
+            type: string
+            format: binary
 
   schemas:
     status:

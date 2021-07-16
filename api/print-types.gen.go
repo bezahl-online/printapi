@@ -13,8 +13,18 @@ type Status struct {
 	Message string `json:"message"`
 }
 
+// InvoiceResponse defines model for invoice_response.
+type InvoiceResponse string
+
 // Statusresponse defines model for statusresponse.
 type Statusresponse Status
+
+// GetInvoiceParams defines parameters for GetInvoice.
+type GetInvoiceParams struct {
+
+	// the receipt code
+	Code string `json:"code"`
+}
 
 // PrintJSONBody defines parameters for Print.
 type PrintJSONBody struct {
