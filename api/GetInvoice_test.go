@@ -11,13 +11,13 @@ import (
 )
 
 func TestGetInvoice(t *testing.T) {
-	receiptCode := "99999320210716121703"
+	receiptCode := "99999320210725105739"
 
 	result := testutil.NewRequest().Get(
 		fmt.Sprintf("/invoice?code=%s", receiptCode)).WithAcceptJson().Go(t, e)
 	if assert.Equal(t, http.StatusOK, result.Code()) {
 		want := "%PDF"
-		got := fmt.Sprintf("%s", result.Recorder.Body)[:4]
-		assert.Equal(t, want, got)
+		got := fmt.Sprintf("%s", result.Recorder.Body.String())
+		assert.Equal(t, want, got[:4])
 	}
 }

@@ -8,19 +8,10 @@ import (
 )
 
 func (a *API) GetInvoice(ctx echo.Context, params GetInvoiceParams) error {
-	var err error
 	uri := "http://localhost:8090/invoice_pdf?code=" + params.Code
-	proxyStream(ctx, uri)
-	if err != nil {
-		return SendError(ctx, http.StatusNotFound, fmt.Sprintf("%s", err.Error()))
-	}
-	return SendStatus(ctx, http.StatusOK, "OK")
-}
-
-func proxyStream(ctx echo.Context, url string) error {
 
 	// Get the data
-	resp, err := http.Get(url)
+	resp, err := http.Get(uri)
 	if err != nil {
 		return err
 	}
@@ -32,6 +23,8 @@ func proxyStream(ctx echo.Context, url string) error {
 
 	// send buffer
 	err = ctx.Blob(200, "application/pdf", b[:nr])
-
-	return err
+	if err != nil {
+		return SendError(ctx, http.StatusNotFound, fmt.Sprintf("%s", err.Error()))
+	}
+	return nil
 }
