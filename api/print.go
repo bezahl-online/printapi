@@ -32,7 +32,8 @@ func print(URL string) error {
 	if err != nil {
 		return err
 	}
-	cmd := exec.Command("lp", "-o", "media=A4", "-d", "DCPL3550CDW", filePath)
+	// cmd := exec.Command("lp", "-o", "media=A4", "-d", "DCPL3550CDW", filePath)
+	cmd := exec.Command("lp", filePath)
 	s, err := cmd.StderrPipe()
 	if err != nil {
 		return err
