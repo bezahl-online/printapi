@@ -11,7 +11,7 @@ import (
 )
 
 func TestGetInvoice(t *testing.T) {
-	receiptCode := "99999320210725105739"
+	receiptCode := "99999120210727120121"
 
 	result := testutil.NewRequest().Get(
 		fmt.Sprintf("/invoice?code=%s", receiptCode)).WithAcceptJson().Go(t, e)

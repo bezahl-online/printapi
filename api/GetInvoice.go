@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 
@@ -15,7 +16,7 @@ func (a *API) GetInvoice(ctx echo.Context, params GetInvoiceParams) error {
 	if len(os.Getenv(INVOICE_PDF_URL)) > 0 {
 		url = os.Getenv(INVOICE_PDF_URL)
 	} else {
-		fmt.Printf("please set environment variable '%s'", INVOICE_PDF_URL)
+		fmt.Printf("please set environment variable '%s'\n", INVOICE_PDF_URL)
 	}
 	uri := url + params.Code
 
@@ -25,15 +26,7 @@ func (a *API) GetInvoice(ctx echo.Context, params GetInvoiceParams) error {
 		return err
 	}
 	defer resp.Body.Close()
+	io.Copy(ctx.Response(), resp.Body)
 
-	// Create the buffer // FIXME: proxy stream directly
-	var b []byte = make([]byte, 10000000)
-	nr, err := resp.Body.Read(b)
-
-	// send buffer
-	err = ctx.Blob(200, "application/pdf", b[:nr])
-	if err != nil {
-		return SendError(ctx, http.StatusNotFound, fmt.Sprintf("%s", err.Error()))
-	}
 	return nil
 }
