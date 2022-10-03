@@ -27,7 +27,7 @@ func (a *API) Print(ctx echo.Context) error {
 var URL = "api.mms.bezahl.online/invoicePDF?"
 
 func print(URL string) error {
-	filePath := "invoice.pdf"
+	filePath := "/tmp/invoice.pdf"
 	err := downloadFile(filePath, URL)
 	if err != nil {
 		return err
