@@ -1,5 +1,6 @@
 { lib
 , buildGoModule
+, fetchFromGitHub
 , nixosTests
 , testers
 , installShellFiles
@@ -15,7 +16,13 @@ buildGoModule {
   pname = "printapi";
   inherit version;
 
-  src = ./.;
+  src = fetchFromGitHub {
+    owner = "bezahl-online";
+    repo = repo;
+    rev = "cd24b5f60ba0fbf902b8ddf3a6a1d4093b3722f7";
+    sha256 = "sha256-e+cxat8iQe1bTLjFuoZEgdnjiqd9VFxUSXul6/VWzJM=";
+  };
+  # src = ../${repo}/.;
  
   vendorSha256 = "sha256-tVbMHXBv8KCM01LXTr54TlCa9Y6vyPQjwF5ywc7v5KM=";
 
