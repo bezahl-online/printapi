@@ -19,8 +19,8 @@ buildGoModule {
   src = fetchFromGitHub {
     owner = "bezahl-online";
     repo = repo;
-    rev = "cd24b5f60ba0fbf902b8ddf3a6a1d4093b3722f7";
-    sha256 = "sha256-e+cxat8iQe1bTLjFuoZEgdnjiqd9VFxUSXul6/VWzJM=";
+    rev = "afa3fbaf24d386f4526d52a788f934d79822e56c";
+    sha256 = "sha256-qNooHgwhFTkfAkvgX4xEjzge6MjjaCrhfKKy2NzKoUo=";
   };
   # src = ../${repo}/.;
  
