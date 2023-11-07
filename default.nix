@@ -24,7 +24,7 @@ buildGoModule {
   };
   # src = ../${repo}/.;
  
-  vendorSha256 = "sha256-tVbMHXBv8KCM01LXTr54TlCa9Y6vyPQjwF5ywc7v5KM=";
+  vendorSha256 = null;
 
   buildPhase = ''
     runHook preBuild
